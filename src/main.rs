@@ -20,7 +20,7 @@ use structopt::StructOpt;
 use sp_core::crypto::{Pair, Ss58Codec, Ss58AddressFormat};
 use sp_keystore::SyncCryptoStore;
 use sc_keystore::LocalKeystore;
-use polkaregistry::{SR25519, TweetProof};
+use polkaregistry::{SR25519, TweetProof, GistProof};
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "polkaregistry", about = "Trustless and free identity registrar for Polkadot and Kulupu.")]
@@ -49,7 +49,11 @@ enum SignCommand {
     Twitter {
         username: String,
         address: String,
-    }
+    },
+    Github {
+        username: String,
+        address: String,
+    },
 }
 
 fn main() {
@@ -63,7 +67,7 @@ fn main() {
         Command::Keystore(KeystoreCommand::Generate) => {
             let public = keystore.sr25519_generate_new(SR25519, None).expect("generating keys failed");
             println!("Generated address: {:?}", public.to_ss58check_with_version(Ss58AddressFormat::PolkadotAccount));
-        }
+        },
         Command::Keystore(KeystoreCommand::Import { suri } ) => {
             let pair = sp_core::sr25519::Pair::from_string(
                 &suri,
@@ -77,9 +81,14 @@ fn main() {
             ).expect("insert failed");
 
             println!("Inserted address: {:?}", pair.public().to_ss58check_with_version(Ss58AddressFormat::PolkadotAccount));
-        }
+        },
         Command::Sign(SignCommand::Twitter { username, address }) => {
             let proof = TweetProof { username, address };
+            let message = proof.message(&keystore);
+            println!("{}", message);
+        },
+        Command::Sign(SignCommand::Github { username, address }) => {
+            let proof = GistProof { username, address };
             let message = proof.message(&keystore);
             println!("{}", message);
         },

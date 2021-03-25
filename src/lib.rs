@@ -17,8 +17,10 @@
 // along with Polkaregistry. If not, see <http://www.gnu.org/licenses/>.
 
 mod twitter;
+mod github;
 
 pub use twitter::TweetProof;
+pub use github::GistProof;
 
 use sp_core::crypto::KeyTypeId;
 
