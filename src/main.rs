@@ -20,7 +20,7 @@ use structopt::StructOpt;
 use sp_core::crypto::{Pair, Ss58Codec, Ss58AddressFormat};
 use sp_keystore::SyncCryptoStore;
 use sc_keystore::LocalKeystore;
-use polkaregistry::{SR25519, TweetProof, GistProof};
+use polkaregistry::{SR25519, TweetProof, GistProof, EEIDProof};
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "polkaregistry", about = "Trustless and free identity registrar for Polkadot and Kulupu.")]
@@ -52,6 +52,10 @@ enum SignCommand {
     },
     Github {
         username: String,
+        address: String,
+    },
+    EEID {
+        legal_name: String,
         address: String,
     },
 }
@@ -92,6 +96,11 @@ fn main() {
             let message = proof.message(&keystore);
             println!("{}", message);
         },
+        Command::Sign(SignCommand::EEID { legal_name, address }) => {
+            let proof = EEIDProof { legal_name, address };
+            let message = proof.message(&keystore);
+            println!("{}", message);
+        }
         Command::Verify => unimplemented!(),
     }
 }

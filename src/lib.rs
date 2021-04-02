@@ -18,9 +18,11 @@
 
 mod twitter;
 mod github;
+mod eeid;
 
 pub use twitter::TweetProof;
 pub use github::GistProof;
+pub use eeid::EEIDProof;
 
 use sp_core::crypto::KeyTypeId;
 
