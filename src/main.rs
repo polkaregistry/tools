@@ -20,7 +20,7 @@ use structopt::StructOpt;
 use sp_core::crypto::{Pair, Ss58Codec, Ss58AddressFormat};
 use sp_keystore::SyncCryptoStore;
 use sc_keystore::LocalKeystore;
-use polkaregistry::{SR25519, TweetProof, GistProof, EEIDProof, MatrixProof};
+use polkaregistry::{SR25519, TweetProof, GistProof, EEIDProof, MatrixProof, WebsiteProof};
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "polkaregistry", about = "Trustless and free identity registrar for Polkadot and Kulupu.")]
@@ -61,7 +61,11 @@ enum SignCommand {
     Matrix {
         username: String,
         address: String,
-    }
+    },
+    Website {
+        domain: String,
+        address: String,
+    },
 }
 
 fn main() {
@@ -109,7 +113,12 @@ fn main() {
             let proof = MatrixProof { username, address };
             let message = proof.message(&keystore);
             println!("{}", message);
-        }
+        },
+        Command::Sign(SignCommand::Website { domain, address }) => {
+            let proof = WebsiteProof { domain, address };
+            let message = proof.message(&keystore);
+            println!("{}", message);
+        },
         Command::Verify => unimplemented!(),
     }
 }
