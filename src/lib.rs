@@ -19,10 +19,12 @@
 mod twitter;
 mod github;
 mod eeid;
+mod matrix;
 
 pub use twitter::TweetProof;
 pub use github::GistProof;
 pub use eeid::EEIDProof;
+pub use matrix::MatrixProof;
 
 use sp_core::crypto::KeyTypeId;
 
